@@ -1,12 +1,17 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <getopt.h>
 
 #define ASCII_SIZE 256
 #define BUFFER_SIZE 512
 
 #define HISTOGRAM_SYMBOL_FILL '#'
 #define HISTOGRAM_SYMBOL_BLANK '_'
+
+#define GETOPT_HELP_CHAR -2
+#define GETOPT_VERSION_CHAR -3
 
 struct SymbolAmount {
     unsigned char symbol;
@@ -29,6 +34,18 @@ void parse_symbols(const unsigned char *symbols)
         }
         symbols++;
     }
+    return;
+}
+
+void parse_file(const char *path)
+{
+    FILE *ptr_file = fopen(path, "r");
+
+    unsigned char buffer[BUFFER_SIZE];
+    while (fgets((char*)buffer, BUFFER_SIZE, ptr_file))
+        parse_symbols(buffer);
+    fclose(ptr_file);
+
     return;
 }
 
@@ -55,20 +72,40 @@ void build_histogram(const size_t histogram_range_max)
 
 int main(int argc, char *argv[])
 {
-    if (argc == 1)
-        goto func_end;
+    static struct option const long_options[] = {
+        {"file", required_argument, NULL, 'f'},
+        {"line", required_argument, NULL, 'l'},
+        {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
+        {"help", no_argument, NULL, GETOPT_HELP_CHAR},
+    };
 
-    FILE *ptr_file = fopen(argv[argc - 1], "r");
-
-    if (!ptr_file) {
-        printf("(!) Not able to open the file.\n");
-        goto func_end;
+    int option;
+    while ((option = getopt_long(argc, argv, "f:l:", long_options, NULL)) != -1) {
+        switch (option) {
+            case 'f':
+                // TODO: File open validation.
+                parse_file(optarg);
+                break;
+            case 'l':
+                parse_symbols((unsigned char*)optarg);
+                break;
+            case GETOPT_VERSION_CHAR:
+                // TODO: Version message.
+                printf("version\n");
+                exit(EXIT_SUCCESS);
+            case GETOPT_HELP_CHAR:
+                // TODO: Help message.
+                printf("help\n");
+                exit(EXIT_SUCCESS);
+            default:
+                // TODO: Usage function.
+                return EXIT_FAILURE;
+        }
     }
 
-    unsigned char buffer[BUFFER_SIZE];
-    while (fgets((char*)buffer, BUFFER_SIZE, ptr_file))
-        parse_symbols(buffer);
-    fclose(ptr_file);
+    if (argc == 1)
+        // TODO: Usage function.
+        goto func_end;
 
     build_histogram(16);
 
