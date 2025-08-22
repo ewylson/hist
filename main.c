@@ -32,12 +32,12 @@ void parse_symbols(const unsigned char *symbols)
     return;
 }
 
-void draw_bar(const unsigned char symbol, const size_t range, const size_t range_max)
+void draw_bar(const unsigned char symbol, const size_t amount, const size_t range, const size_t range_max)
 {
     char bar[range_max + 1];
     for (size_t i = 0; i < range_max; i++)
         bar[i] = (i < range) ? HISTOGRAM_SYMBOL_FILL : HISTOGRAM_SYMBOL_BLANK;
-    printf("%c: [%s]\n", symbol, bar);
+    printf("%c: [%s] (%lu)\n", symbol, bar, amount);
     return;
 }
 
@@ -48,7 +48,7 @@ void build_histogram(const size_t histogram_range_max)
     const size_t max_value = ascii_symbols[0].amount;
     for (unsigned char i = 0; ascii_symbols[i].amount > 0; i++) {
         const float scale = (float)ascii_symbols[i].amount / max_value;
-        draw_bar(ascii_symbols[i].symbol, scale * histogram_range_max, histogram_range_max);
+        draw_bar(ascii_symbols[i].symbol, ascii_symbols[i].amount, scale * histogram_range_max, histogram_range_max);
     }
     return;
 }
