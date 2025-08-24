@@ -6,6 +6,7 @@
 
 #define ASCII_SIZE 256
 #define BUFFER_SIZE 512
+#define BAR_MAX_WIDTH 256
 
 #define HISTOGRAM_SYMBOL_FILL '#'
 #define HISTOGRAM_SYMBOL_BLANK '_'
@@ -17,6 +18,13 @@ struct SymbolAmount {
     unsigned char symbol;
     size_t amount;
 } ascii_symbols[ASCII_SIZE];
+
+struct Bar {
+    unsigned char symbol;
+    size_t amount;
+    size_t range;
+    char data[BAR_MAX_WIDTH];
+};
 
 int compare_symbols(const void *a, const void *b)
 {
@@ -49,12 +57,12 @@ void parse_file(const char *path)
     return;
 }
 
-void draw_bar(const unsigned char symbol, const size_t amount, const size_t range, const size_t range_max)
+void draw_bar(struct Bar *bar, const size_t fill_range)
 {
-    char bar[range_max + 1];
-    for (size_t i = 0; i < range_max; i++)
-        bar[i] = (i < range) ? HISTOGRAM_SYMBOL_FILL : HISTOGRAM_SYMBOL_BLANK;
-    printf("%c: [%s] (%lu)\n", symbol, bar, amount);
+    for (size_t i = 0; i < bar->range; i++)
+        bar->data[i] = (i < fill_range) ? HISTOGRAM_SYMBOL_FILL : HISTOGRAM_SYMBOL_BLANK;
+    bar->data[bar->range] = '\0';
+    printf("%c: [%s] (%lu)\n", bar->symbol, bar->data, bar->amount);
     return;
 }
 
@@ -62,11 +70,15 @@ void build_histogram(const size_t histogram_range_max)
 {
     qsort(ascii_symbols, ASCII_SIZE, sizeof(struct SymbolAmount), compare_symbols);
 
+    struct Bar bar = {.range = histogram_range_max, .data = {0}};
     const size_t max_value = ascii_symbols[0].amount;
     for (unsigned char i = 0; ascii_symbols[i].amount > 0; i++) {
         const float scale = (float)ascii_symbols[i].amount / max_value;
-        draw_bar(ascii_symbols[i].symbol, ascii_symbols[i].amount, scale * histogram_range_max, histogram_range_max);
+        bar.symbol = ascii_symbols[i].symbol;
+        bar.amount = ascii_symbols[i].amount;
+        draw_bar(&bar, scale * histogram_range_max);
     }
+
     return;
 }
 
