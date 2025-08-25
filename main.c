@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include <getopt.h>
 
+#define PROGRAM_NAME "hist"
+
 #define ASCII_SIZE 256
 #define BUFFER_SIZE 512
 #define BAR_MAX_WIDTH 256
@@ -45,15 +47,12 @@ void parse_symbols(const unsigned char *symbols)
     return;
 }
 
-void parse_file(const char *path)
+void parse_file(FILE *file)
 {
-    FILE *ptr_file = fopen(path, "r");
-
     unsigned char buffer[BUFFER_SIZE];
-    while (fgets((char*)buffer, BUFFER_SIZE, ptr_file))
+    while (fgets((char*)buffer, BUFFER_SIZE, file))
         parse_symbols(buffer);
-    fclose(ptr_file);
-
+    fclose(file);
     return;
 }
 
@@ -82,6 +81,15 @@ void build_histogram(const size_t histogram_range_max)
     return;
 }
 
+void process_file(const char *path)
+{
+    FILE *ptr_file = fopen(path, "r");
+    if (ptr_file)
+        parse_file(ptr_file);
+    else printf("%s: %s: No such file\n", PROGRAM_NAME, path);
+    return;
+}
+
 int main(int argc, char *argv[])
 {
     static struct option const long_options[] = {
@@ -94,10 +102,10 @@ int main(int argc, char *argv[])
     int option;
     while ((option = getopt_long(argc, argv, "f:l:", long_options, NULL)) != -1) {
         switch (option) {
-            case 'f':
-                // TODO: File open validation.
-                parse_file(optarg);
+            case 'f': {
+                process_file(optarg);
                 break;
+            }
             case 'l':
                 parse_symbols((unsigned char*)optarg);
                 break;
