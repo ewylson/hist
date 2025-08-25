@@ -36,7 +36,7 @@ int compare_symbols(const void *a, const void *b)
 void parse_symbols(const unsigned char *symbols)
 {
     while (*symbols) {
-        if (!iscntrl(*symbols)) {
+        if (isprint(*symbols)) {
             ascii_symbols[*symbols].symbol = *symbols;
             ascii_symbols[*symbols].amount++;
         }
