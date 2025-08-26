@@ -119,10 +119,9 @@ int main(int argc, char *argv[])
                 letters_only_flag = false;
                 digits_only_flag = true;
                 break;
-            case 'f': {
+            case 'f':
                 process_file(optarg);
                 break;
-            }
             case 's':
                 parse_symbols((unsigned char*)optarg);
                 break;
