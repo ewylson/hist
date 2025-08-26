@@ -94,19 +94,19 @@ int main(int argc, char *argv[])
 {
     static struct option const long_options[] = {
         {"file", required_argument, NULL, 'f'},
-        {"line", required_argument, NULL, 'l'},
+        {"string", required_argument, NULL, 's'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "f:l:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "f:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'f': {
                 process_file(optarg);
                 break;
             }
-            case 'l':
+            case 's':
                 parse_symbols((unsigned char*)optarg);
                 break;
             case GETOPT_VERSION_CHAR:
