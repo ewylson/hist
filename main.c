@@ -28,6 +28,9 @@ struct Bar {
     char data[BAR_MAX_WIDTH];
 };
 
+bool letters_only_flag = false;
+bool digits_only_flag = false;
+
 int compare_symbols(const void *a, const void *b)
 {
     size_t amount_a = ((struct SymbolAmount*)a)->amount;
@@ -37,8 +40,12 @@ int compare_symbols(const void *a, const void *b)
 
 void parse_symbols(const unsigned char *symbols)
 {
+    bool is_char_counted = false;
     while (*symbols) {
-        if (isprint(*symbols)) {
+        is_char_counted = isprint(*symbols) 
+            && (letters_only_flag ? isalpha(*symbols) : true)
+            && (digits_only_flag ? isdigit(*symbols) : true);
+        if (is_char_counted) {
             ascii_symbols[*symbols].symbol = *symbols;
             ascii_symbols[*symbols].amount++;
         }
@@ -95,13 +102,23 @@ int main(int argc, char *argv[])
     static struct option const long_options[] = {
         {"file", required_argument, NULL, 'f'},
         {"string", required_argument, NULL, 's'},
+        {"letters-only", no_argument, NULL, 'l'},
+        {"digits-only", no_argument, NULL, 'd'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "f:s:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldf:s:", long_options, NULL)) != -1) {
         switch (option) {
+            case 'l':
+                letters_only_flag = true;
+                digits_only_flag = false;
+                break;
+            case 'd':
+                letters_only_flag = false;
+                digits_only_flag = true;
+                break;
             case 'f': {
                 process_file(optarg);
                 break;
