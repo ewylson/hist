@@ -28,9 +28,8 @@ struct Bar {
     char data[BAR_MAX_WIDTH];
 };
 
-bool letters_only_flag = false;
-bool digits_only_flag = false;
-bool case_insensitive_flag = false;
+static int (*ptr_filter_func)(int) = &isprint;
+static bool case_insensitive_flag = false;
 
 int compare_symbols(const void *a, const void *b)
 {
@@ -41,12 +40,8 @@ int compare_symbols(const void *a, const void *b)
 
 void parse_symbols(const unsigned char *symbols)
 {
-    bool is_char_counted = false;
     while (*symbols) {
-        is_char_counted = isprint(*symbols) 
-            && (letters_only_flag ? isalpha(*symbols) : true)
-            && (digits_only_flag ? isdigit(*symbols) : true);
-        if (is_char_counted) {
+        if ((*ptr_filter_func)(*symbols)) {
             char symbol = case_insensitive_flag ? toupper(*symbols) : *symbols;
             ascii_symbols[(int)symbol].symbol = symbol;
             ascii_symbols[(int)symbol].amount++;
@@ -115,12 +110,10 @@ int main(int argc, char *argv[])
     while ((option = getopt_long(argc, argv, "ldCf:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
-                letters_only_flag = true;
-                digits_only_flag = false;
+                ptr_filter_func = &isalpha;
                 break;
             case 'd':
-                letters_only_flag = false;
-                digits_only_flag = true;
+                ptr_filter_func = &isdigit;
                 break;
             case 'C':
                 case_insensitive_flag = true;
