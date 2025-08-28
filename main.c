@@ -101,19 +101,23 @@ int main(int argc, char *argv[])
         {"string", required_argument, NULL, 's'},
         {"letters-only", no_argument, NULL, 'l'},
         {"digits-only", no_argument, NULL, 'd'},
+        {"alphanumeric-only", no_argument, NULL, 'a'},
         {"case-insensitive", no_argument, NULL, 'C'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "ldCf:s:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldaCf:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
                 ptr_filter_func = &isalpha;
                 break;
             case 'd':
                 ptr_filter_func = &isdigit;
+                break;
+            case 'a':
+                ptr_filter_func = &isalnum;
                 break;
             case 'C':
                 case_insensitive_flag = true;
