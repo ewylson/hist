@@ -29,6 +29,7 @@ struct Bar {
 };
 
 static int (*ptr_filter_func)(int) = &isprint;
+static int (*ptr_filter_case_func)(int) = &isprint;
 static bool case_insensitive_flag = false;
 
 int compare_symbols(const void *a, const void *b)
@@ -41,12 +42,16 @@ int compare_symbols(const void *a, const void *b)
 void parse_symbols(const unsigned char *symbols)
 {
     while (*symbols) {
-        if ((*ptr_filter_func)(*symbols)) {
-            char symbol = case_insensitive_flag ? toupper(*symbols) : *symbols;
+        char symbol = *symbols;
+        symbols++;
+        if ((*ptr_filter_func)(symbol)) {
+            if (isalpha(symbol) && !(*ptr_filter_case_func)(symbol))
+                continue;
+            if (case_insensitive_flag)
+                symbol = toupper(symbol);
             ascii_symbols[(int)symbol].symbol = symbol;
             ascii_symbols[(int)symbol].amount++;
         }
-        symbols++;
     }
     return;
 }
@@ -102,13 +107,15 @@ int main(int argc, char *argv[])
         {"letters-only", no_argument, NULL, 'l'},
         {"digits-only", no_argument, NULL, 'd'},
         {"alphanumeric-only", no_argument, NULL, 'a'},
+        {"lowercase-letters-only", no_argument, NULL, 'L'},
+        {"uppercase-letters-only", no_argument, NULL, 'U'},
         {"case-insensitive", no_argument, NULL, 'C'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "ldaCf:s:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldaLUCf:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
                 ptr_filter_func = &isalpha;
@@ -119,8 +126,15 @@ int main(int argc, char *argv[])
             case 'a':
                 ptr_filter_func = &isalnum;
                 break;
+            case 'L':
+                ptr_filter_case_func = &islower;
+                break;
+            case 'U':
+                ptr_filter_case_func = &isupper;
+                break;
             case 'C':
                 case_insensitive_flag = true;
+                ptr_filter_case_func = &isprint;
                 break;
             case 'f':
                 process_file(optarg);
