@@ -90,20 +90,9 @@ void build_histogram(const size_t histogram_range_max)
     return;
 }
 
-void process_file(const char *path)
-{
-    FILE *ptr_file = fopen(path, "r");
-    if (ptr_file)
-        parse_file(ptr_file);
-    else printf("%s: %s: No such file\n", PROGRAM_NAME, path);
-    return;
-}
-
 int main(int argc, char *argv[])
 {
     static struct option const long_options[] = {
-        {"file", required_argument, NULL, 'f'},
-        {"string", required_argument, NULL, 's'},
         {"letters-only", no_argument, NULL, 'l'},
         {"digits-only", no_argument, NULL, 'd'},
         {"alphanumeric-only", no_argument, NULL, 'a'},
@@ -116,7 +105,7 @@ int main(int argc, char *argv[])
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "ldapLUCf:s:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldapLUC", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
                 ptr_filter_symbols_func = &isalpha;
@@ -140,12 +129,6 @@ int main(int argc, char *argv[])
                 case_insensitive_flag = true;
                 ptr_filter_case_func = &isprint;
                 break;
-            case 'f':
-                process_file(optarg);
-                break;
-            case 's':
-                parse_symbols((unsigned char*)optarg);
-                break;
             case GETOPT_VERSION_CHAR:
                 // TODO: Version message.
                 printf("version\n");
@@ -163,6 +146,11 @@ int main(int argc, char *argv[])
     if (argc == 1)
         // TODO: Usage function.
         goto func_end;
+
+    FILE *ptr_file = fopen(argv[argc - 1], "r");
+    if (ptr_file)
+        parse_file(ptr_file);
+    else printf("%s: %s: No such file\n", PROGRAM_NAME, argv[argc - 1]);
 
     build_histogram(16);
 
