@@ -32,6 +32,31 @@ static int (*ptr_filter_symbols_func)(int) = &isprint;
 static int (*ptr_filter_case_func)(int) = &isprint;
 static bool case_insensitive_flag = false;
 
+void usage()
+{
+    printf("Usage: %s [OPTION]... FILE\n", PROGRAM_NAME);
+    fputs("Counts printable characters in a file and creates a histogram.\n", stdout);
+    fputs(
+        "\n\
+    -l, --letters-only              count only letters\n\
+    -d, --digits-only               count only decimal digits\n\
+    -a, --alphanumeric-only         count only letters and decimal digits\n\
+    -p, --punctuation-only          count only punctuation marks\n\
+    -L, --lowercase-letters-only    count only lowercase letters among letters\n\
+    -U, --uppercase-letters-only    count only uppercase letters among letters\n\
+    -C, --case-insensitive          count identical letters with different case as a single character\n\
+        --help                      display this help and exit\n\
+        --version                   output version information and exit\n\
+        \n", stdout
+    );
+    printf(
+        "Examples:\n\
+    %s file.txt     Count all printed characters in the file and display a histogram.\n\
+    %s -aC file.txt Count only letters and digits in the file, ignoring case, and display a histogram.\
+        \n", PROGRAM_NAME, PROGRAM_NAME
+    );
+}
+
 int compare_symbols(const void *a, const void *b)
 {
     size_t amount_a = ((struct SymbolAmount*)a)->amount;
@@ -134,18 +159,17 @@ int main(int argc, char *argv[])
                 printf("version\n");
                 exit(EXIT_SUCCESS);
             case GETOPT_HELP_CHAR:
-                // TODO: Help message.
-                printf("help\n");
+                usage();
                 exit(EXIT_SUCCESS);
             default:
-                // TODO: Usage function.
-                return EXIT_FAILURE;
+                exit(EXIT_FAILURE);
         }
     }
 
-    if (argc == 1)
-        // TODO: Usage function.
-        goto func_end;
+    if (argc == 1) {
+        usage();
+        exit(EXIT_FAILURE);
+    }
 
     FILE *ptr_file = fopen(argv[argc - 1], "r");
     if (ptr_file)
@@ -154,6 +178,5 @@ int main(int argc, char *argv[])
 
     build_histogram(16);
 
-func_end:
     return EXIT_SUCCESS;
 }
