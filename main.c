@@ -28,7 +28,7 @@ struct Bar {
     char data[BAR_MAX_WIDTH];
 };
 
-static int (*ptr_filter_func)(int) = &isprint;
+static int (*ptr_filter_symbols_func)(int) = &isprint;
 static int (*ptr_filter_case_func)(int) = &isprint;
 static bool case_insensitive_flag = false;
 
@@ -44,7 +44,7 @@ void parse_symbols(const unsigned char *symbols)
     while (*symbols) {
         char symbol = *symbols;
         symbols++;
-        if ((*ptr_filter_func)(symbol)) {
+        if ((*ptr_filter_symbols_func)(symbol)) {
             if (isalpha(symbol) && !(*ptr_filter_case_func)(symbol))
                 continue;
             if (case_insensitive_flag)
@@ -119,16 +119,16 @@ int main(int argc, char *argv[])
     while ((option = getopt_long(argc, argv, "ldapLUCf:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
-                ptr_filter_func = &isalpha;
+                ptr_filter_symbols_func = &isalpha;
                 break;
             case 'd':
-                ptr_filter_func = &isdigit;
+                ptr_filter_symbols_func = &isdigit;
                 break;
             case 'a':
-                ptr_filter_func = &isalnum;
+                ptr_filter_symbols_func = &isalnum;
                 break;
             case 'p':
-                ptr_filter_func = &ispunct;
+                ptr_filter_symbols_func = &ispunct;
                 break;
             case 'L':
                 ptr_filter_case_func = &islower;
