@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
         {"letters-only", no_argument, NULL, 'l'},
         {"digits-only", no_argument, NULL, 'd'},
         {"alphanumeric-only", no_argument, NULL, 'a'},
+        {"punctuation-only", no_argument, NULL, 'p'},
         {"lowercase-letters-only", no_argument, NULL, 'L'},
         {"uppercase-letters-only", no_argument, NULL, 'U'},
         {"case-insensitive", no_argument, NULL, 'C'},
@@ -115,7 +116,7 @@ int main(int argc, char *argv[])
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "ldaLUCf:s:", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldapLUCf:s:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
                 ptr_filter_func = &isalpha;
@@ -125,6 +126,9 @@ int main(int argc, char *argv[])
                 break;
             case 'a':
                 ptr_filter_func = &isalnum;
+                break;
+            case 'p':
+                ptr_filter_func = &ispunct;
                 break;
             case 'L':
                 ptr_filter_case_func = &islower;
