@@ -32,6 +32,8 @@ static int (*ptr_filter_symbols_func)(int) = &isprint;
 static int (*ptr_filter_case_func)(int) = &isprint;
 static bool case_insensitive_flag = false;
 
+static size_t total = 0;
+
 void usage()
 {
     printf("Usage: %s [OPTION]... FILE\n", PROGRAM_NAME);
@@ -77,6 +79,7 @@ void parse_symbols(const unsigned char *symbols)
                 symbol = toupper(symbol);
             ascii_symbols[(int)symbol].symbol = symbol;
             ascii_symbols[(int)symbol].amount++;
+            total++;
         }
     }
     return;
@@ -113,6 +116,7 @@ void build_histogram(const size_t histogram_range_max)
         draw_bar(&bar, scale * histogram_range_max);
     }
 
+    printf("TOTAL: %lu\n", total);
     return;
 }
 
