@@ -44,7 +44,7 @@ void usage()
     -p, --punctuation-only          count only punctuation marks\n\
     -L, --lowercase-letters-only    count only lowercase letters among letters\n\
     -U, --uppercase-letters-only    count only uppercase letters among letters\n\
-    -C, --case-insensitive          count identical letters with different case as a single character\n\
+    -C, --case-ignore               count identical letters with different case as a single character\n\
         --help                      display this help and exit\n\
         --version                   output version information and exit\n\
         \n", stdout
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
         {"punctuation-only", no_argument, NULL, 'p'},
         {"lowercase-letters-only", no_argument, NULL, 'L'},
         {"uppercase-letters-only", no_argument, NULL, 'U'},
-        {"case-insensitive", no_argument, NULL, 'C'},
+        {"case-ignore", no_argument, NULL, 'C'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
