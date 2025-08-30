@@ -170,8 +170,7 @@ int main(int argc, char *argv[])
                 }
                 break;
             case GETOPT_VERSION_CHAR:
-                // TODO: Version message.
-                printf("version\n");
+                printf("%s 1.0\nCopyright (C) ewylson\nLicense MIT\n", PROGRAM_NAME);
                 exit(EXIT_SUCCESS);
             case GETOPT_HELP_CHAR:
                 usage();
