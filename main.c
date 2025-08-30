@@ -45,6 +45,7 @@ void usage()
     -L, --lowercase-letters-only    count only lowercase letters among letters\n\
     -U, --uppercase-letters-only    count only uppercase letters among letters\n\
     -C, --case-ignore               count identical letters with different case as a single character\n\
+    -r, --range=SIZE                set the histogram range\n\
         --help                      display this help and exit\n\
         --version                   output version information and exit\n\
         \n", stdout
@@ -117,6 +118,8 @@ void build_histogram(const size_t histogram_range_max)
 
 int main(int argc, char *argv[])
 {
+    int histogram_range = 32;
+
     static struct option const long_options[] = {
         {"letters-only", no_argument, NULL, 'l'},
         {"digits-only", no_argument, NULL, 'd'},
@@ -125,12 +128,13 @@ int main(int argc, char *argv[])
         {"lowercase-letters-only", no_argument, NULL, 'L'},
         {"uppercase-letters-only", no_argument, NULL, 'U'},
         {"case-ignore", no_argument, NULL, 'C'},
+        {"range", required_argument, NULL, 'r'},
         {"version", no_argument, NULL, GETOPT_VERSION_CHAR},
         {"help", no_argument, NULL, GETOPT_HELP_CHAR},
     };
 
     int option;
-    while ((option = getopt_long(argc, argv, "ldapLUC", long_options, NULL)) != -1) {
+    while ((option = getopt_long(argc, argv, "ldapLUCr:", long_options, NULL)) != -1) {
         switch (option) {
             case 'l':
                 ptr_filter_symbols_func = &isalpha;
@@ -154,6 +158,13 @@ int main(int argc, char *argv[])
                 case_insensitive_flag = true;
                 ptr_filter_case_func = &isprint;
                 break;
+            case 'r':
+                histogram_range = atoi(optarg);
+                if (histogram_range > BAR_MAX_WIDTH || histogram_range < 1) {
+                    printf("%s: %s: The range must be between 0 and %d\n", PROGRAM_NAME, optarg, BAR_MAX_WIDTH);
+                    exit(EXIT_FAILURE);
+                }
+                break;
             case GETOPT_VERSION_CHAR:
                 // TODO: Version message.
                 printf("version\n");
@@ -176,7 +187,7 @@ int main(int argc, char *argv[])
         parse_file(ptr_file);
     else printf("%s: %s: No such file\n", PROGRAM_NAME, argv[argc - 1]);
 
-    build_histogram(16);
+    build_histogram(histogram_range);
 
     return EXIT_SUCCESS;
 }
