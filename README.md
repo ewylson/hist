@@ -1,7 +1,7 @@
 # hist
 A simple C program that counts printable ASCII characters in a file and generates a histogram.
 
-Download (Linux only): *link*
+Download (Linux only): https://github.com/ewylson/hist/releases/tag/v1.0
 
 ## How to use
 
