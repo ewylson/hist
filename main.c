@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <getopt.h>
 
+
 #define ASCII_SIZE 256
 #define BUFFER_SIZE 512
 #define BAR_MAX_WIDTH 256
@@ -24,6 +25,7 @@
   #endif
 #endif
 
+
 struct SymbolAmount {
     unsigned char symbol;
     size_t amount;
@@ -36,6 +38,7 @@ struct Bar {
     char data[BAR_MAX_WIDTH];
 };
 
+
 static const char *const PROGRAM_NAME = "hist";
 
 static int (*ptr_filter_symbols_func)(int) = &isprint;
@@ -43,6 +46,7 @@ static int (*ptr_filter_case_func)(int) = &isprint;
 static bool case_insensitive_flag = false;
 
 static size_t total = 0;
+
 
 void usage(void)
 {
