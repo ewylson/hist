@@ -4,8 +4,6 @@
 #include <ctype.h>
 #include <getopt.h>
 
-#define PROGRAM_NAME "hist"
-
 #define ASCII_SIZE 256
 #define BUFFER_SIZE 512
 #define BAR_MAX_WIDTH 256
@@ -37,6 +35,8 @@ struct Bar {
     size_t range;
     char data[BAR_MAX_WIDTH];
 };
+
+static const char *const PROGRAM_NAME = "hist";
 
 static int (*ptr_filter_symbols_func)(int) = &isprint;
 static int (*ptr_filter_case_func)(int) = &isprint;
