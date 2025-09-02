@@ -7,14 +7,14 @@ You can download the latest or specific version of **hist** from the [Releases](
 
 ### Supported Platforms
 
-| OS    | Arch     | Libc   |
-|-------|----------|--------|
-| Linux | x86_64   | glibc  |
-| Linux | x86_64   | musl   |
-| Linux | i686     | glibc  |
-| Linux | aarch64  | glibc  |
-| Linux | aarch64  | musl   |
-| BSD   | x86_64   | glibc  |
+| OS    | Arch     | Libc     |
+|-------|----------|----------|
+| Linux | x86_64   | glibc    |
+| Linux | x86_64   | musl     |
+| Linux | i686     | glibc    |
+| Linux | aarch64  | glibc    |
+| Linux | aarch64  | musl     |
+| BSD   | x86_64   | freebsd  |
 
 ## How to use
 
