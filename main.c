@@ -16,6 +16,16 @@
 #define GETOPT_HELP_CHAR -2
 #define GETOPT_VERSION_CHAR -3
 
+#ifdef _WIN32
+  #error This program is not supported on Windows.
+#else
+  #if defined(__x86_64__) || defined(__aarch64__)
+    #define XU "lu"
+  #else
+    #define XU "zu"
+  #endif
+#endif
+
 struct SymbolAmount {
     unsigned char symbol;
     size_t amount;
@@ -99,7 +109,7 @@ void draw_bar(struct Bar *bar, const size_t fill_range)
     for (size_t i = 0; i < bar->range; i++)
         bar->data[i] = (i < fill_range) ? HISTOGRAM_SYMBOL_FILL : HISTOGRAM_SYMBOL_BLANK;
     bar->data[bar->range] = '\0';
-    printf("%c: [%s] (%lu)\n", bar->symbol, bar->data, bar->amount);
+    printf("%c: [%s] (%"XU")\n", bar->symbol, bar->data, bar->amount);
     return;
 }
 
@@ -116,7 +126,7 @@ void build_histogram(const size_t histogram_range_max)
         draw_bar(&bar, scale * histogram_range_max);
     }
 
-    printf("TOTAL: %lu\n", total);
+    printf("TOTAL: %"XU"\n", total);
     return;
 }
 
