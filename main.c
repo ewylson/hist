@@ -44,7 +44,7 @@ static bool case_insensitive_flag = false;
 
 static size_t total = 0;
 
-void usage()
+void usage(void)
 {
     printf("Usage: %s [OPTION]... FILE\n", PROGRAM_NAME);
     fputs("Counts printable characters in a file and creates a histogram.\n", stdout);
