@@ -1,7 +1,20 @@
 # hist
 A simple C program that counts printable ASCII characters in a file and generates a histogram.
 
-Download (Linux only): https://github.com/ewylson/hist/releases/tag/v1.0
+## Download
+
+You can download the latest or specific version of **hist** from the [Releases](https://github.com/ewylson/hist/releases) page.
+
+### Supported Platforms
+
+| OS    | Arch     | Libc   |
+|-------|----------|--------|
+| Linux | x86_64   | glibc  |
+| Linux | x86_64   | musl   |
+| Linux | i686     | glibc  |
+| Linux | aarch64  | glibc  |
+| Linux | aarch64  | musl   |
+| BSD   | x86_64   | glibc  |
 
 ## How to use
 
@@ -32,11 +45,6 @@ Examples:
 The program can be compiled manually with any C compiler that supports the C99 standard or later, such as GCC or Clang:
 ```console
 cc main.c -o hist -std=c99 -O2
-```
-
-Alternatively, you can build the program using the `make` utility from within the program directory:
-```console
-make
 ```
 
 ## License
