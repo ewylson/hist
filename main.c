@@ -16,7 +16,7 @@
 #define GETOPT_VERSION_CHAR -3
 
 #ifdef _WIN32
-#error This program is not supported on Windows.
+#error "This program is not supported on Windows."
 #else
 #if defined(__x86_64__) || defined(__aarch64__)
 #define XU "lu"
